@@ -1,8 +1,9 @@
 {
-  "name": "@luizgustavolino/lv-cli",
-  "version": "1.0.0",
+  "name": "@lv-game-editor/lv-cli",
+  "version": "1.0.1",
   "description": "lv-game-editor companion cli",
   "author": "“Lino <luizgustavolino@gmail.com> (http://github.com/luizgustavolino)",
+  "homepage": "https://github.com/lv-e/lv-cli",
   "license": "ISC",
   "publishConfig": {
     "access": "public"
@@ -10,6 +11,11 @@
   "keywords": [
     "game editor, arduino, microcontroller"
   ],
+  "repository": {
+    "type" : "git",
+    "url" : "github:lv-e/lv-cli.git"
+  },
+  "files": ["/lib"],
   "main": "./lib/index.js",
   "bin": {
     "lv-cli": "./lib/index.js"
@@ -17,7 +23,7 @@
   "scripts": {
     "start": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
     "build": "rm -rf ./lib && tsc -p . && node .",
-    "install": "sudo npm i -g && lv-cli",
+    "install": "npm i -g && lv-cli",
     "refresh": "rm -rf ./node_modules ./package-lock.json && npm install"
   },
   "dependencies": {

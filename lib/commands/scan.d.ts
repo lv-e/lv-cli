@@ -17,4 +17,4 @@ export interface RootFolders {
     generated_at: String;
 }
 export declare function scan(inputFolder: string, outputFile: string, mode?: Mode): void;
-export declare function root_folders(root: string, verbose: boolean): RootFolders;
+export declare function root_folders(root: string): RootFolders;
