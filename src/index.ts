@@ -2,42 +2,49 @@
 'use strict'
 
 import meow from "meow";
-import { scan } from "./scan";
+import { scan } from "./commands/scan";
+import { encode } from "./commands/encode";
+import { writeFileSync } from "fs";
 
 let cli = meow(`
     Usage
-    $ lv-cli <action> -i <input> -o <output>
+    $ lv-cli [verbose|help] <action> -i <input> -o <output>
 `, {
     flags: {
         input: {
-            type: 'string',
-            alias: 'i',
-            default: "."
+            type: 'string', alias: 'i', default: "."
         },
         output: {
-            type: 'string',
-            alias: 'o'
+            type: 'string', alias: 'o'
         }
     }
 })
 
+export type Mode = ("run"|"help"|"verbose")
+
+const input = cli.flags.input
+const output = cli.flags.output
+let command:string
+let mode:Mode
+
 switch (cli.input[0]) {
+    case "verbose":
+        command = cli.input[1]
+        mode = "verbose"
+        break
     case "help":
-        console.log(cli.help)
+        command = cli.input[1]
+        mode = "help"
         break
-
-    case "scan":
-        
-        const dir = cli.flags.input
-        console.log("scaning " + dir)
-        
-        let scanData = scan(dir)
-        let jsonResponse = JSON.stringify(scanData, null, '  ')
-        console.log(jsonResponse)
-
+    default:
+        command = cli.input[0]
+        mode = "run"    
         break
+}
 
-    case "debug":
-        console.log(cli.input[0], cli.flags)
-        break
+switch (command) {
+    case "help": console.log(cli.help); break
+    case "scan": scan(input, output, mode); break;
+    case "encode": encode(input, output, mode); break;
+    case "debug": console.log(cli.input[0], cli.flags); break
 }
