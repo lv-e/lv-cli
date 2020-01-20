@@ -1,6 +1,6 @@
 {
   "name": "@lv-game-editor/lv-cli",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "lv-game-editor companion cli",
   "author": "“Lino <luizgustavolino@gmail.com> (http://github.com/luizgustavolino)",
   "homepage": "https://github.com/lv-e/lv-cli",
@@ -21,10 +21,7 @@
     "lv-cli": "./lib/index.js"
   },
   "scripts": {
-    "start": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
-    "build": "rm -rf ./lib && tsc -p . && node .",
-    "install": "npm i -g && lv-cli",
-    "refresh": "rm -rf ./node_modules ./package-lock.json && npm install"
+    "rebuild": "rm -rf ./lib && tsc -p . && node ."
   },
   "dependencies": {
     "esm": "^3.2.25",
