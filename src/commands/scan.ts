@@ -21,10 +21,14 @@ export interface DirMap {
     directories:DirMap[]
 }
 
+export interface SceneMap extends DirMap {
+    
+}
+
 export interface RootFolders {
-    scenes: DirMap[];
-    shared: DirMap[];
-    unused: DirMap[];
+    scenes: SceneMap[]
+    shared: DirMap[]
+    unused: DirMap[]
     generated_at: String
 }
 
@@ -72,7 +76,7 @@ function list(folder:string, name:string) : DirMap {
 export function root_folders(root:string) : RootFolders {
 
     let shared: DirMap[] = []
-    let scenes: DirMap[] = []
+    let scenes: SceneMap[] = []
     let unused: DirMap[] = []
 
     readdirSync(root, { withFileTypes: true })

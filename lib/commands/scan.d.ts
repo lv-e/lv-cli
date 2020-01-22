@@ -10,8 +10,10 @@ export interface DirMap {
     name: String;
     directories: DirMap[];
 }
+export interface SceneMap extends DirMap {
+}
 export interface RootFolders {
-    scenes: DirMap[];
+    scenes: SceneMap[];
     shared: DirMap[];
     unused: DirMap[];
     generated_at: String;
