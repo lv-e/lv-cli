@@ -1,7 +1,7 @@
 import { readdir, readdirSync, Dirent, writeFileSync } from "fs";
 import { extname } from "path";
 import { log } from "../helpers/helpers";
-import { Mode } from "..";
+import { mode } from "lvcli";
 
 const helpText = `
 'scan' will receive a input folder and search for
@@ -32,7 +32,7 @@ export interface RootFolders {
     generated_at: String
 }
 
-export function scan(inputFolder:string, outputFile:string, mode:Mode = "run") {
+export function scan(inputFolder:string, outputFile:string, mode:mode = "run") {
 
     if (mode == "help") log(true, helpText)
     else {

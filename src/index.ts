@@ -1,10 +1,9 @@
 #!/usr/bin/env node
 'use strict'
 
-import meow from "meow";
-import { scan } from "./commands/scan";
-import { encode } from "./commands/encode";
-import { writeFileSync } from "fs";
+import meow from "meow"
+import { scan } from "./commands/scan"
+import { encode } from "./commands/encode"
 
 let cli = meow(`
     Usage
@@ -20,12 +19,26 @@ let cli = meow(`
     }
 })
 
-export type Mode = ("run"|"help"|"verbose")
+export type mode = ("run" | "help" | "verbose");
+
+export type encoder = {
+    extension: string;
+    npm_module: string;
+};
+
+export type encoded = {
+    declarations: string;
+    on_awake: string;
+    on_enter: string;
+    on_exit: string;
+    on_frame: string;
+};
 
 const input = cli.flags.input
 const output = cli.flags.output
+
 let command:string
-let mode:Mode
+let mode:mode
 
 switch (cli.input[0]) {
     case "verbose":

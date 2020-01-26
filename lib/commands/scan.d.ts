@@ -1,4 +1,4 @@
-import { Mode } from "..";
+import { mode } from "lvcli";
 export interface FileMap {
     path: String;
     name: String;
@@ -18,5 +18,5 @@ export interface RootFolders {
     unused: DirMap[];
     generated_at: String;
 }
-export declare function scan(inputFolder: string, outputFile: string, mode?: Mode): void;
+export declare function scan(inputFolder: string, outputFile: string, mode?: mode): void;
 export declare function root_folders(root: string): RootFolders;
