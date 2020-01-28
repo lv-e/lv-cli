@@ -1,4 +1,4 @@
-import { mode } from "lvcli";
+import { mode } from "../index";
 export interface FileMap {
     path: String;
     name: String;
@@ -6,8 +6,8 @@ export interface FileMap {
 }
 export interface DirMap {
     files: FileMap[];
-    path: String;
-    name: String;
+    path: string;
+    name: string;
     directories: DirMap[];
 }
 export interface SceneMap extends DirMap {

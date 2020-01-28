@@ -1,7 +1,7 @@
 import { readdir, readdirSync, Dirent, writeFileSync } from "fs";
 import { extname } from "path";
 import { log } from "../helpers/helpers";
-import { mode } from "lvcli";
+import { mode } from "../index";
 
 const helpText = `
 'scan' will receive a input folder and search for
@@ -16,8 +16,8 @@ export interface FileMap {
 
 export interface DirMap {
     files:FileMap[]
-    path:String
-    name:String
+    path:string
+    name:string
     directories:DirMap[]
 }
 

@@ -24,6 +24,7 @@ export type mode = ("run" | "help" | "verbose");
 export type encoder = {
     extension: string;
     npm_module: string;
+    command: string;
 };
 
 export type encoded = {

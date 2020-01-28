@@ -3,6 +3,7 @@ export declare type mode = ("run" | "help" | "verbose");
 export declare type encoder = {
     extension: string;
     npm_module: string;
+    command: string;
 };
 export declare type encoded = {
     declarations: string;
