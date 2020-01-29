@@ -28,12 +28,35 @@ export type encoder = {
 };
 
 export type encoded = {
-    declarations: string;
-    on_awake: string;
-    on_enter: string;
-    on_exit: string;
-    on_frame: string;
-};
+    declarations: string
+    on_awake: string
+    on_enter: string
+    on_exit: string
+    on_frame: string
+}
+
+export type fileMap = {
+    path:string
+    name:string
+    extension:string
+}
+
+export type dirMap = {
+    files:fileMap[]
+    path:string
+    name:string
+    directories:dirMap[]
+}
+
+export type sceneMap = dirMap
+
+export type rootFolders = {
+    scenes: sceneMap[]
+    shared: dirMap[]
+    unused: dirMap[]
+    project_file: fileMap
+    generated_at: string
+}
 
 const input = cli.flags.input
 const output = cli.flags.output

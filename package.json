@@ -1,6 +1,6 @@
 {
   "name": "@lv-game-editor/lv-cli",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "lv-game-editor companion cli",
   "author": "“Lino <luizgustavolino@gmail.com> (http://github.com/luizgustavolino)",
   "homepage": "https://github.com/lv-e/lv-cli",
@@ -29,12 +29,13 @@
   "dependencies": {
     "@types/shelljs": "^0.8.6",
     "astyle": "^2.0.0",
+    "chalk": "^3.0.0",
     "esm": "^3.2.25",
     "meow": "^6.0.0",
     "shelljs": "^0.8.3"
   },
   "devDependencies": {
-    "@types/node": "^13.5.0",
+    "@types/node": "^13.5.1",
     "nodemon": "^2.0.2",
     "ts-node": "^8.6.2",
     "typescript": "^3.7.5"

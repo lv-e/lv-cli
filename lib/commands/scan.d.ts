@@ -1,22 +1,3 @@
-import { mode } from "../index";
-export interface FileMap {
-    path: String;
-    name: String;
-    extension: String;
-}
-export interface DirMap {
-    files: FileMap[];
-    path: string;
-    name: string;
-    directories: DirMap[];
-}
-export interface SceneMap extends DirMap {
-}
-export interface RootFolders {
-    scenes: SceneMap[];
-    shared: DirMap[];
-    unused: DirMap[];
-    generated_at: String;
-}
-export declare function scan(inputFolder: string, outputFile: string, mode?: mode): void;
-export declare function root_folders(root: string): RootFolders;
+import { mode, rootFolders } from "../index";
+export declare function scan(inputFolder: string, outputFile: string, mode?: mode, project_file_extension?: string): void;
+export declare function root_folders(root: string, project_file_extension: string): rootFolders;

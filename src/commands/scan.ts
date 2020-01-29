@@ -1,47 +1,26 @@
 import { readdir, readdirSync, Dirent, writeFileSync } from "fs";
-import { extname } from "path";
+import { extname, join } from "path";
 import { log } from "../helpers/helpers";
-import { mode } from "../index";
+import { mode, fileMap, dirMap, rootFolders, sceneMap } from "../index";
+import { fail } from "assert";
+import chalk = require("chalk");
 
 const helpText = `
 'scan' will receive a input folder and search for
  scenes, shared files and unused ones.
  the output will be a json describing the folder structure.`
 
-export interface FileMap {
-    path:String
-    name:String
-    extension:String
-}
-
-export interface DirMap {
-    files:FileMap[]
-    path:string
-    name:string
-    directories:DirMap[]
-}
-
-export interface SceneMap extends DirMap {
-    
-}
-
-export interface RootFolders {
-    scenes: SceneMap[]
-    shared: DirMap[]
-    unused: DirMap[]
-    generated_at: String
-}
-
-export function scan(inputFolder:string, outputFile:string, mode:mode = "run") {
+export function scan(inputFolder:string, outputFile:string,
+    mode:mode = "run", project_file_extension:string = ".lvproject") {
 
     if (mode == "help") log(true, helpText)
     else {
 
         const vflag = mode == "verbose" ? true : false
-        log(vflag, "[command] scan")
+        log(vflag, chalk.green("[command] ") + chalk.blue("scan"))
 
         log(vflag, "scanning " + inputFolder)
-        let results = root_folders(inputFolder)
+        let results = root_folders(inputFolder, project_file_extension)
 
         log(vflag, "writting scan results to " + outputFile)
         let jsonData = JSON.stringify(results, null, ' ')
@@ -51,10 +30,10 @@ export function scan(inputFolder:string, outputFile:string, mode:mode = "run") {
     }
 }
 
-function list(folder:string, name:string) : DirMap {
+function list(folder:string, name:string) : dirMap {
 
-    let files:FileMap[] = []
-    let directories:DirMap[] = []
+    let files:fileMap[] = []
+    let directories:dirMap[] = []
 
     readdirSync(folder, { withFileTypes: true })
         .forEach( entry => {
@@ -73,11 +52,27 @@ function list(folder:string, name:string) : DirMap {
     return {files: files, path: folder, name: name, directories:directories}
 }
 
-export function root_folders(root:string) : RootFolders {
+export function root_folders(root:string, project_file_extension:string) : rootFolders {
 
-    let shared: DirMap[] = []
-    let scenes: SceneMap[] = []
-    let unused: DirMap[] = []
+    let shared: dirMap[] = []
+    let scenes: sceneMap[] = []
+    let unused: dirMap[] = []
+    let project_file: fileMap | null = null
+    
+    readdirSync(root, { withFileTypes: true })
+        .filter(entry => entry.isFile())
+        .forEach(entry => {
+            if(entry.name.endsWith(project_file_extension)){
+                const extension = project_file_extension
+                const name = entry.name
+                const path = join(root, name)
+                project_file = {path: path, name:name, extension:extension}
+            }
+        })
+
+    if (project_file == null) {
+        fail("project file is missing!")
+    }
 
     readdirSync(root, { withFileTypes: true })
         .filter(entry => entry.isDirectory())
@@ -93,10 +88,7 @@ export function root_folders(root:string) : RootFolders {
             }
         })
 
-    return {
-        scenes: scenes,
-        shared: shared,
-        unused: unused,
-        generated_at: Date()
+    return { scenes, shared, unused, project_file,
+        generated_at: (new Date()).toISOString()
     }
 }

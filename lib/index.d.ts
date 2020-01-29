@@ -12,3 +12,22 @@ export declare type encoded = {
     on_exit: string;
     on_frame: string;
 };
+export declare type fileMap = {
+    path: string;
+    name: string;
+    extension: string;
+};
+export declare type dirMap = {
+    files: fileMap[];
+    path: string;
+    name: string;
+    directories: dirMap[];
+};
+export declare type sceneMap = dirMap;
+export declare type rootFolders = {
+    scenes: sceneMap[];
+    shared: dirMap[];
+    unused: dirMap[];
+    project_file: fileMap;
+    generated_at: string;
+};
