@@ -6,8 +6,8 @@ import { fail } from "assert";
 import chalk = require("chalk");
 
 const helpText = `
-'scan' will receive a input folder and search for
- scenes, shared files and unused ones.
+'scan' will receive a input folder and search for the *.lvproject,
+ scenes folders, shared folder and files and unused folders.
  the output will be a json describing the folder structure.`
 
 export function scan(inputFolder:string, outputFile:string,

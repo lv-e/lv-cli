@@ -1,5 +1,5 @@
 
-export const template_hpp = 
+export const template_scene_hpp = 
 `
     #include <stdio.h>
     
@@ -10,7 +10,7 @@ export const template_hpp =
     void {{scene_name}}_on_frame();
     void {{scene_name}}_on_exit();
 `
-export const template_cpp = 
+export const template_scene_cpp = 
 `
     #include "{{scene_name}}.h"
 
@@ -31,4 +31,20 @@ export const template_cpp =
     void {{scene_name}}_on_exit(){
         {{on_exit}}
     }
+`
+
+export const template_scene_include = `#include "{{scene_name}}.h"`
+
+export const template_main_c = 
+`
+// + LV game engine +
+// there's magic in these files <3
+{{scene_includes}}
+
+int main(){
+    scene_main_on_enter();
+    scene_main_on_frame();
+    scene_main_on_exit();
+    return 0;
+}
 `

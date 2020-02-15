@@ -24,7 +24,7 @@ export type mode = ("run" | "help" | "verbose");
 export type encoder = {
     extension: string;
     npm_module: string;
-    command: string;
+    cli_command: string;
 };
 
 export type encoded = {
@@ -33,6 +33,7 @@ export type encoded = {
     on_enter: string
     on_exit: string
     on_frame: string
+    main_h: string
 }
 
 export type fileMap = {
@@ -49,6 +50,13 @@ export type dirMap = {
 }
 
 export type sceneMap = dirMap
+
+export type projectContent = {
+    header:{
+        version:string,
+        encoders:encoder[]
+    }
+}
 
 export type rootFolders = {
     scenes: sceneMap[]

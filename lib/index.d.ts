@@ -3,7 +3,7 @@ export declare type mode = ("run" | "help" | "verbose");
 export declare type encoder = {
     extension: string;
     npm_module: string;
-    command: string;
+    cli_command: string;
 };
 export declare type encoded = {
     declarations: string;
@@ -11,6 +11,7 @@ export declare type encoded = {
     on_enter: string;
     on_exit: string;
     on_frame: string;
+    main_h: string;
 };
 export declare type fileMap = {
     path: string;
@@ -24,6 +25,12 @@ export declare type dirMap = {
     directories: dirMap[];
 };
 export declare type sceneMap = dirMap;
+export declare type projectContent = {
+    header: {
+        version: string;
+        encoders: encoder[];
+    };
+};
 export declare type rootFolders = {
     scenes: sceneMap[];
     shared: dirMap[];

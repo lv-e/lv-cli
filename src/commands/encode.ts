@@ -1,10 +1,10 @@
 import { log, rand_salt, replaceAll, removeBlankLines, createDirs } from "../helpers/helpers";
 import { readFileSync, readdir, readdirSync, writeFileSync } from "fs";
 import { join } from "path";
-import { mode, encoded, encoder, rootFolders, sceneMap, dirMap, fileMap } from "../index";
+import { mode, encoded, encoder, rootFolders, sceneMap, dirMap, fileMap, projectContent } from "../index";
 import shell from "shelljs";
 import astyle from "astyle";
-import { template_cpp, template_hpp } from "../helpers/encoder_templates";
+import { template_scene_cpp, template_scene_hpp, template_scene_include, template_main_c } from "../helpers/encoder_templates";
 import chalk = require("chalk");
 
 const helpText = `
@@ -15,14 +15,9 @@ const helpText = `
  let vflag:boolean = false
  let sceneID = 1
  let outputDir:string
+ let encoders:encoder[] = []
 
- const encoders:encoder[] = [
-    { extension: ".lvcode", npm_module: "@lv-game-editor/encoder-lvcode", command: "lv-encoder-lvcode"},
-    { extension: ".lvproject", npm_module: "@lv-game-editor/encoder-lvproject", command: "lv-encoder-lvproject"},
-    //{extension: ".lvsprite", npm_module: "lv-encoder-sprite"},
- ]
-
-export function encode(input:string, output:string, mode:mode) {
+export async function encode(input:string, output:string, mode:mode) {
     if (mode == "help") log(true, helpText)
     else {
 
@@ -30,42 +25,75 @@ export function encode(input:string, output:string, mode:mode) {
         vflag = mode == "verbose" ? true : false
         log(vflag, chalk.green("[command] ") + chalk.blue("encode"))
 
-        log(vflag, "updating node modules...")
-        updateModules()
-
         const jsonString = readFileSync(input, "utf8")
         const data:rootFolders = JSON.parse(jsonString) 
+        
         encodeProject(data.project_file)
-        data.scenes.forEach( scene => {
-            encodeScene(scene)
+        
+        let promises = await data.scenes.map( async scene => {
+            return await encodeScene(scene)
         })
+
+        let encodedScenes = await Promise.all(promises)
+        encodeMainFiles(encodedScenes)
     }
 } 
 
+function encodeMainFiles(encodedScenes:encoded[]) {
+    log(vflag, chalk.cyan("generating main.c file"))
+    let includes = encodedScenes.map( s => s.main_h ).join("\n")
+    let mainCode = replaceAll(template_main_c, "{{scene_includes}}", includes)
+    let mainFilePath = join(outputDir, "source", "main.c")
+    
+    writeFileSync(mainFilePath, mainCode)
+    log(vflag, "done! main.c can be found at: " + mainFilePath)
+}
+
 function updateModules(){
     encoders.forEach ( encoder => {
-        if (!shell.which(encoder.command)){
+        if (!shell.which(encoder.cli_command)){
             log(vflag, "updating encoder under npm module named " + encoder.npm_module)
             shell.exec("npm update -g " + encoder.npm_module)   
         }
     })
 }
 
-function encodeScene(scene:sceneMap) {
-    log(vflag, chalk.cyan("encoding: ") + scene.name)
-    encodeDir(scene, scene)
-    mergeEncoded(scene).then( response => {
-        const sceneSourceDir = join(outputDir, "source")
-        
-        let hppPath = join(sceneSourceDir, scene.name + ".h")
-        let cppPath = join(sceneSourceDir, scene.name + ".c") 
-        
-        createDirs(hppPath)
-        createDirs(cppPath)
+function encodeProject(file:fileMap) {
 
-        writeFileSync(hppPath, response.hpp)
-        writeFileSync(cppPath, response.cpp)
+    const jsonString = readFileSync(file.path, "utf8")
+    const project:projectContent = JSON.parse(jsonString) 
+    encoders = project.header.encoders
+
+    log(vflag, "updating node modules...")
+    updateModules()
+
+    encoders.forEach( encoder => {
+        if (encoder.extension == file.extension) {
+            const outputFile = join(outputDir, "h-stripes", file.name + ".h-stripe")
+            log(vflag, chalk.cyan("encoding game project: ") + file.name + " with " + encoder.npm_module)
+            shell.exec(encoder.cli_command + " -i " + file.path + " -o " + outputFile)
+        }
     })
+}
+
+async function encodeScene(scene:sceneMap) : Promise<encoded> {
+    
+    log(vflag, chalk.cyan("encoding: ") + chalk.cyanBright(scene.name))
+    encodeDir(scene, scene)
+
+    const response = await mergeEncoded(scene)
+    const sceneSourceDir = join(outputDir, "source")
+        
+    let hppPath = join(sceneSourceDir, scene.name + ".h")
+    let cppPath = join(sceneSourceDir, scene.name + ".c") 
+        
+    createDirs(hppPath)
+    createDirs(cppPath)
+
+    writeFileSync(hppPath, response.hpp)
+    writeFileSync(cppPath, response.cpp)
+
+    return response.encodedScene
 }
 
 function encodeDir(dir:dirMap, scene:sceneMap) {
@@ -73,22 +101,12 @@ function encodeDir(dir:dirMap, scene:sceneMap) {
     dir.files.forEach( file => encodeFile(file, scene))
 }
 
-function encodeProject(file:fileMap) {
-    encoders.forEach( encoder => {
-        if (encoder.extension == file.extension) {
-            const outputFile = join(outputDir, "h-stripes", file.name + ".h-stripe")
-            log(vflag, chalk.cyan("encoding game project: ") + file.name + " with " + encoder.npm_module)
-            shell.exec(encoder.command + " -i " + file.path + " -o " + outputFile)
-        }
-    })
-}
-
 function encodeFile(file:fileMap, scene:sceneMap) {
     encoders.forEach( encoder => {
         if (encoder.extension == file.extension) {
             log(vflag, "encoding file: " + file.name + " with " + encoder.npm_module)
             const outputFile = join(outputDir, scene.name, "h-stripes", file.name + ".h-stripe")
-            shell.exec(encoder.command + " -i " + file.path + " -o " + outputFile)
+            shell.exec(encoder.cli_command + " -i " + file.path + " -o " + outputFile)
         }
     })
 }
@@ -100,12 +118,15 @@ async function mergeEncoded(scene:sceneMap) {
     const files = readdirSync(sceneDir)
 
     let reduced:encoded = {
+        main_h: "",
         declarations: "",
         on_awake: "",
         on_enter: "",
         on_frame: "",
         on_exit: ""
     }
+
+    reduced.main_h = applySceneReplaces(template_scene_include, scene)
 
     files.forEach( file => {
 
@@ -118,14 +139,10 @@ async function mergeEncoded(scene:sceneMap) {
         reduced.on_enter       += removeBlankLines("\n" + (data.on_enter || ""))
         reduced.on_frame       += removeBlankLines("\n" + (data.on_frame || ""))
         reduced.on_exit        += removeBlankLines("\n" + (data.on_exit || ""))
-        
     })
 
     function applyReplaces(subject:string) : string {
-        let mutable = subject
-        mutable = replaceAll(mutable, "{{scene_name}}", scene.name)
-        mutable = replaceAll(mutable, "{{uppercased_scene_name}}", scene.name.toUpperCase())
-        mutable = replaceAll(mutable, "{{scene_id}}", " " + (sceneID++))
+        let mutable = applySceneReplaces(subject, scene)
         mutable = replaceAll(mutable, "{{declarations}}", reduced.declarations)
         mutable = replaceAll(mutable, "{{on_awake}}", reduced.on_awake)
         mutable = replaceAll(mutable, "{{on_enter}}", reduced.on_enter)
@@ -134,8 +151,16 @@ async function mergeEncoded(scene:sceneMap) {
         return mutable
     }
 
-    let sceneCPPFile = await astyle.format(applyReplaces(template_cpp))
-    let sceneHPPFile = await astyle.format(applyReplaces(template_hpp))
+    let sceneCPPFile = await astyle.format(applyReplaces(template_scene_cpp))
+    let sceneHPPFile = await astyle.format(applyReplaces(template_scene_hpp))
 
-    return {hpp: sceneHPPFile, cpp: sceneCPPFile}
+    return {hpp: sceneHPPFile, cpp: sceneCPPFile, encodedScene: reduced}
+}
+
+function applySceneReplaces(subject:string, scene:sceneMap) : string {
+    let mutable = subject
+    mutable = replaceAll(mutable, "{{scene_name}}", scene.name)
+    mutable = replaceAll(mutable, "{{uppercased_scene_name}}", scene.name.toUpperCase())
+    mutable = replaceAll(mutable, "{{scene_id}}", " " + (sceneID++))
+    return mutable
 }
