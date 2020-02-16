@@ -3,7 +3,7 @@ import chalk = require("chalk")
 import shell from "shelljs";
 import astyle from "astyle";
 import { join } from "path"
-import { createDirs, replaceAll, removeBlankLines, log } from "../../helpers/helpers"
+import { createDirs, replaceAll, removeBlankLines, log, saltForPath } from "../../helpers/helpers"
 import { writeFileSync, readdirSync, readFileSync } from "fs"
 import { vflag, outputDir, project } from "../encode"
 import { template_scene_include, template_scene_cpp, template_scene_hpp } from "./templates";
@@ -42,7 +42,9 @@ function encodeSceneFile(file:fileMap, scene:sceneMap) {
     encoders.forEach( encoder => {
         if (encoder.extension == file.extension) {
             log(vflag, "encoding file: " + file.name + " with " + encoder.npm_module)
-            const outputFile = join(outputDir, scene.name, "h-stripes", file.name + ".h-stripe")
+            const path = join(outputDir, scene.name, "h-stripes")
+            const salt = saltForPath(file.path)
+            const outputFile = join(path, salt + file.name + ".h-stripe")
             shell.exec(encoder.cli_command + " -i " + file.path + " -o " + outputFile)
         }
     })
@@ -60,6 +62,8 @@ async function mergeEncodedScene(scene:sceneMap) {
     files.forEach( file => {
 
         const filepath = join(sceneDir, file)
+        if (!filepath.endsWith(".h-stripe")) return
+
         const jsonString = readFileSync(filepath, "utf8")
         const data:encoded = JSON.parse(jsonString)
 

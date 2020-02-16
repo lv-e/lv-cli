@@ -3,8 +3,6 @@
 
 export const template_scene_hpp = 
 `
-    #include "shared.h"
-    
     static unsigned char {{uppercased_scene_name}} = {{scene_id}};
 
     void {{scene_name}}_on_awake();
@@ -12,9 +10,12 @@ export const template_scene_hpp =
     void {{scene_name}}_on_frame();
     void {{scene_name}}_on_exit();
 `
+
 export const template_scene_cpp = 
 `
     #include "{{scene_name}}.h"
+    #include "shared.h"
+    #include "lv/engine.h"
 
     {{declarations}}
     
@@ -43,8 +44,11 @@ export const template_shared_hpp =
 `
 #ifndef _SHARED_GUARD
 #define _SHARED_GUARD
+
 // shared declarations:
+
 {{declarations}}
+
 #endif
 `
 

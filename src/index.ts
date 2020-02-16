@@ -55,9 +55,15 @@ export type dirMap = {
 
 export type sceneMap = dirMap
 
+export type engineDefinition = {
+    repo:string,
+    tag:string
+}
+
 export type projectContent = {
     header:{
         version:string,
+        engine:engineDefinition
         encoders:encoder[]
     }
 }

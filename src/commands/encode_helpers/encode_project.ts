@@ -2,9 +2,9 @@ import { fileMap, projectContent, encoder } from "../.."
 import chalk = require("chalk")
 import shell from "shelljs";
 import { join } from "path"
-import { log } from "../../helpers/helpers"
+import { log, createDirs } from "../../helpers/helpers"
 import { readFileSync } from "fs"
-import { vflag, outputDir, project } from "../encode";
+import { vflag, outputDir } from "../encode";
 
 export function encodeProject(file:fileMap) : projectContent{
 
@@ -18,12 +18,14 @@ export function encodeProject(file:fileMap) : projectContent{
 
     encoders.forEach( encoder => {
         if (encoder.extension == file.extension) {
-            const outputFile = join(outputDir, "h-stripes", file.name + ".h-stripe")
+            const outputPath = join(outputDir, "source", "lv", "engine.h")
             log(vflag, chalk.blue("encoding project: ") + chalk.cyan(file.name))
             log(vflag, "using " + encoder.npm_module)
-            shell.exec(encoder.cli_command + " -i " + file.path + " -o " + outputFile)
+            createDirs(outputPath)
+            shell.exec(encoder.cli_command + " -i " + file.path + " -o " + outputPath)
         }
     })
+
 
     return project
 }

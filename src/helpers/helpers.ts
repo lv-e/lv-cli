@@ -1,9 +1,14 @@
-import { randomBytes } from "crypto";
+import { randomBytes, createHash } from "crypto";
 import { existsSync, mkdirSync } from "fs";
 import path = require("path");
 
 export function log(verbose:boolean, message:string) {
     if (verbose) console.log(message);
+}
+
+export function saltForPath(path:string) : string {
+    const digest = createHash('md5').update(path).digest("hex")
+    return digest.slice(0,6) + "-"
 }
 
 export function rand_salt(size:number) : string{
