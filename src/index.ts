@@ -37,8 +37,8 @@ export type encoded = {
 }
 
 export function blankEncoded():encoded {
-    return { declarations:null, include_directive: null,
-        on_awake: null, on_enter: null, on_exit: null, on_frame: null }
+    return { declarations: "", include_directive: "",
+        on_awake: "", on_enter: "", on_exit: "", on_frame: "" }
 }
 export type fileMap = {
     path:string

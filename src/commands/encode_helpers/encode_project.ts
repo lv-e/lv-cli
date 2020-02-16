@@ -4,7 +4,7 @@ import shell from "shelljs";
 import { join } from "path"
 import { log } from "../../helpers/helpers"
 import { readFileSync } from "fs"
-import { vflag, outputDir } from "../encode";
+import { vflag, outputDir, project } from "../encode";
 
 export function encodeProject(file:fileMap) : projectContent{
 
@@ -29,11 +29,17 @@ export function encodeProject(file:fileMap) : projectContent{
 }
 
 function updateModules(){
-    log(vflag, "need to fix updateModules someday")
-    // encoders.forEach ( encoder => {
-    //     if (!shell.which(encoder.cli_command)){
-    //         log(vflag, "updating encoder under npm module named " + encoder.npm_module)
-    //         shell.exec("npm update -g " + encoder.npm_module)   
-    //     }
-    // })
+    
+    // need to fix updateModules someday!
+    // was having issues with sudo on mac
+
+    // let encoders = project.header.encoders
+    let encoders:encoder[] = [] 
+
+    encoders.forEach ( encoder => {
+        if (!shell.which(encoder.cli_command)){
+            log(vflag, "updating encoder under npm module named " + encoder.npm_module)
+            shell.exec("npm update -g " + encoder.npm_module)   
+        }
+    })
 }

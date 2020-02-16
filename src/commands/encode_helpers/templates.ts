@@ -1,7 +1,9 @@
 
+// --- templates for scenes
+
 export const template_scene_hpp = 
 `
-    #include <stdio.h>
+    #include "shared.h"
     
     static unsigned char {{uppercased_scene_name}} = {{scene_id}};
 
@@ -33,12 +35,28 @@ export const template_scene_cpp =
     }
 `
 
-export const template_scene_include = `#include "{{scene_name}}.h"`
+export const template_scene_include  = `#include "{{scene_name}}.h"`
+
+// --- templates for shared folders
+
+export const template_shared_hpp = 
+`
+#ifndef _SHARED_GUARD
+#define _SHARED_GUARD
+// shared declarations:
+{{declarations}}
+#endif
+`
+
+export const template_shared_include = `#include "shared.h"`
+
+// --- templates for main
 
 export const template_main_c = 
 `
 // + LV game engine +
 // there's magic in these files <3
+
 {{scene_includes}}
 
 int main(){

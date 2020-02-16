@@ -5,8 +5,9 @@ import astyle from "astyle";
 import { join } from "path"
 import { createDirs, replaceAll, removeBlankLines, log } from "../../helpers/helpers"
 import { writeFileSync, readdirSync, readFileSync } from "fs"
-import { template_scene_include, template_scene_cpp, template_scene_hpp } from "../../helpers/encoder_templates"
-import { vflag, outputDir, project } from "../encode";
+import { vflag, outputDir, project } from "../encode"
+import { template_scene_include, template_scene_cpp, template_scene_hpp } from "./templates";
+
 
 
 export async function encodeScene(scene:sceneMap) : Promise<encoded> {
