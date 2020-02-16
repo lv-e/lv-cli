@@ -30,18 +30,34 @@ export async function encode(input:string, output:string, mode:mode) {
         
         encodeProject(data.project_file)
         
-        let promises = await data.scenes.map( async scene => {
-            return await encodeScene(scene)
-        })
-
+        let promises = await data.scenes.map( async scene =>  await encodeScene(scene))
         let encodedScenes = await Promise.all(promises)
+        
+        data.shared.map( dir => encodeSharedDir(dir))
+        
         encodeMainFiles(encodedScenes)
     }
 } 
 
+function encodeSharedDir(dir:dirMap){
+    log(vflag, chalk.blue("encoding shared folder: ") + chalk.cyan(dir.name))
+    dir.files.forEach( file => encodeSharedFile(file))
+    dir.directories.forEach( dir =>  encodeSharedDir(dir))
+}
+    
+function encodeSharedFile(file:fileMap) {
+    encoders.forEach( encoder => {
+        if (encoder.extension == file.extension) {
+            log(vflag, "encoding shared file: " + file.name + " with " + encoder.npm_module)
+            const outputFile = join(outputDir, "shared", "h-stripes", file.name + ".h-stripe")
+            shell.exec(encoder.cli_command + " -i " + file.path + " -o " + outputFile)
+        }
+    })
+}
+
 function encodeMainFiles(encodedScenes:encoded[]) {
-    log(vflag, chalk.cyan("generating main.c file"))
-    let includes = encodedScenes.map( s => s.main_h ).join("\n")
+    log(vflag, chalk.blue("generating main.c file"))
+    let includes = encodedScenes.map( s => s.globals ).join("\n")
     let mainCode = replaceAll(template_main_c, "{{scene_includes}}", includes)
     let mainFilePath = join(outputDir, "source", "main.c")
     
@@ -70,7 +86,8 @@ function encodeProject(file:fileMap) {
     encoders.forEach( encoder => {
         if (encoder.extension == file.extension) {
             const outputFile = join(outputDir, "h-stripes", file.name + ".h-stripe")
-            log(vflag, chalk.cyan("encoding game project: ") + file.name + " with " + encoder.npm_module)
+            log(vflag, chalk.blue("encoding project: ") + chalk.cyan(file.name))
+            log(vflag, "using " + encoder.npm_module)
             shell.exec(encoder.cli_command + " -i " + file.path + " -o " + outputFile)
         }
     })
@@ -78,7 +95,7 @@ function encodeProject(file:fileMap) {
 
 async function encodeScene(scene:sceneMap) : Promise<encoded> {
     
-    log(vflag, chalk.cyan("encoding: ") + chalk.cyanBright(scene.name))
+    log(vflag, chalk.blue("encoding: ") + chalk.cyan(scene.name))
     encodeDir(scene, scene)
 
     const response = await mergeEncoded(scene)
@@ -118,7 +135,7 @@ async function mergeEncoded(scene:sceneMap) {
     const files = readdirSync(sceneDir)
 
     let reduced:encoded = {
-        main_h: "",
+        globals: "",
         declarations: "",
         on_awake: "",
         on_enter: "",
@@ -126,7 +143,7 @@ async function mergeEncoded(scene:sceneMap) {
         on_exit: ""
     }
 
-    reduced.main_h = applySceneReplaces(template_scene_include, scene)
+    reduced.globals = applySceneReplaces(template_scene_include, scene)
 
     files.forEach( file => {
 
@@ -138,16 +155,16 @@ async function mergeEncoded(scene:sceneMap) {
         reduced.on_awake       += removeBlankLines("\n" + (data.on_awake || ""))
         reduced.on_enter       += removeBlankLines("\n" + (data.on_enter || ""))
         reduced.on_frame       += removeBlankLines("\n" + (data.on_frame || ""))
-        reduced.on_exit        += removeBlankLines("\n" + (data.on_exit || ""))
+        reduced.on_exit        += removeBlankLines("\n" + (data.on_exit  || ""))
     })
 
     function applyReplaces(subject:string) : string {
         let mutable = applySceneReplaces(subject, scene)
-        mutable = replaceAll(mutable, "{{declarations}}", reduced.declarations)
-        mutable = replaceAll(mutable, "{{on_awake}}", reduced.on_awake)
-        mutable = replaceAll(mutable, "{{on_enter}}", reduced.on_enter)
-        mutable = replaceAll(mutable, "{{on_frame}}", reduced.on_frame)
-        mutable = replaceAll(mutable, "{{on_exit}}", reduced.on_exit)
+        mutable = replaceAll(mutable, "{{declarations}}", reduced.declarations || "")
+        mutable = replaceAll(mutable, "{{on_awake}}", reduced.on_awake || "")
+        mutable = replaceAll(mutable, "{{on_enter}}", reduced.on_enter || "")
+        mutable = replaceAll(mutable, "{{on_frame}}", reduced.on_frame || "")
+        mutable = replaceAll(mutable, "{{on_exit}}" , reduced.on_exit  || "")
         return mutable
     }
 

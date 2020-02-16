@@ -6,12 +6,12 @@ export declare type encoder = {
     cli_command: string;
 };
 export declare type encoded = {
-    declarations: string;
-    on_awake: string;
-    on_enter: string;
-    on_exit: string;
-    on_frame: string;
-    main_h: string;
+    declarations: string | null;
+    on_awake: string | null;
+    on_enter: string | null;
+    on_exit: string | null;
+    on_frame: string | null;
+    globals: string | null;
 };
 export declare type fileMap = {
     path: string;
