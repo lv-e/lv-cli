@@ -28,14 +28,18 @@ export type encoder = {
 };
 
 export type encoded = {
-    declarations:   string | null
-    on_awake:       string | null
-    on_enter:       string | null
-    on_exit:        string | null
-    on_frame:       string | null
-    globals:        string | null
+    declarations:(string | null)
+    include_directive:(string | null)
+    on_awake:(string | null)
+    on_enter:(string | null)
+    on_exit:(string | null)
+    on_frame:(string | null)
 }
 
+export function blankEncoded():encoded {
+    return { declarations:null, include_directive: null,
+        on_awake: null, on_enter: null, on_exit: null, on_frame: null }
+}
 export type fileMap = {
     path:string
     name:string
