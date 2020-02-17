@@ -65,7 +65,7 @@ export const template_main_c =
 
 int main(){
     scene_main_on_enter();
-    scene_main_on_frame();
+    for(int i = 0; i < 10; i ++) scene_main_on_frame();
     scene_main_on_exit();
     return 0;
 }
