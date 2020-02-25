@@ -1,6 +1,6 @@
 import { readdir, readdirSync, Dirent, writeFileSync } from "fs";
 import { extname, join } from "path";
-import { log } from "../helpers/helpers";
+import { log, createDirs } from "../helpers/helpers";
 import { mode, fileMap, dirMap, rootFolders, sceneMap } from "../index";
 import { fail } from "assert";
 import chalk = require("chalk");
@@ -24,6 +24,7 @@ export function scan(inputFolder:string, outputFile:string,
 
         log(vflag, "writting scan results to " + outputFile)
         let jsonData = JSON.stringify(results, null, ' ')
+        createDirs(outputFile)
         writeFileSync(outputFile, jsonData)
 
         log(vflag, "project structure saved!")
