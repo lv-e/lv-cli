@@ -25,7 +25,7 @@
   },
   "scripts": {
     "rebuild": "rm -rf ./lib && tsc -p . && node .",
-    "version-bump": "npm run rebuild && git commit -a -m '$MESSAGE' && npm version patch -m 'version bump' && npm publish"
+    "version-bump": "npm run rebuild && git commit -a -m 'version bump' && npm version patch -m 'version bump' && npm publish"
   },
   "dependencies": {
     "@types/shelljs": "^0.8.6",
