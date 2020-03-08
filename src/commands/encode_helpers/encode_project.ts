@@ -27,20 +27,12 @@ export function encodeProject(file:fileMap) : projectContent{
         }
     })
 
-
     return project
 }
 
 function updateModules(encoders:encoder[]){
-    
-    // need to fix updateModules someday!
-    // was having issues with sudo on mac
-
-    //let encoders = project.header.encoders
-    //let encoders:encoder[] = [] 
-
     encoders.forEach ( encoder => {
-        if (!shell.which(encoder.cli_command)){
+        if (encoder.auto_update && !shell.which(encoder.cli_command)){
             log(vflag, "updating encoder under npm module named " + encoder.npm_module)
             shell.exec("npm install -g " + encoder.npm_module)   
         }
