@@ -24,8 +24,7 @@
     "lv-cli": "./lib/index.js"
   },
   "scripts": {
-    "rebuild": "rm -rf ./lib && tsc -p . && node .",
-    "version-bump": "npm run rebuild && git commit -a -m 'version bump' && npm version patch -m 'version bump' && npm publish"
+    "rebuild": "rm -rf ./lib && tsc -p . && node ."
   },
   "dependencies": {
     "@types/shelljs": "^0.8.6",

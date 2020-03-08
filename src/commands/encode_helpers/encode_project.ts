@@ -14,7 +14,7 @@ export function encodeProject(file:fileMap) : projectContent{
     let encoders = project.header.encoders
 
     log(vflag, "updating node modules...")
-    updateModules()
+    updateModules(encoders)
 
     encoders.forEach( encoder => {
         if (encoder.extension == file.extension) {
@@ -31,13 +31,13 @@ export function encodeProject(file:fileMap) : projectContent{
     return project
 }
 
-function updateModules(){
+function updateModules(encoders:encoder[]){
     
     // need to fix updateModules someday!
     // was having issues with sudo on mac
 
-    // let encoders = project.header.encoders
-    let encoders:encoder[] = [] 
+    //let encoders = project.header.encoders
+    //let encoders:encoder[] = [] 
 
     encoders.forEach ( encoder => {
         if (!shell.which(encoder.cli_command)){
