@@ -4,6 +4,7 @@
 import meow from "meow"
 import { scan } from "./commands/scan"
 import { encode } from "./commands/encode"
+import { type } from "os"
 
 let cli = meow(`
     Usage
@@ -21,9 +22,16 @@ let cli = meow(`
 
 export type mode = ("run" | "help" | "verbose");
 
+export type driver = {
+    name: string;
+    docker_image: string;
+    cli_command: string;
+}
+
 export type encoder = {
     extension: string;
     npm_module: string;
+    auto_update: boolean;
     cli_command: string;
 };
 
@@ -63,7 +71,8 @@ export type engineDefinition = {
 export type projectContent = {
     header:{
         version:string,
-        engine:engineDefinition
+        engine:engineDefinition,
+        drivers:driver[],
         encoders:encoder[]
     }
 }

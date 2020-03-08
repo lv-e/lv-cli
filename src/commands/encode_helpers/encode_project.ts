@@ -42,7 +42,7 @@ function updateModules(encoders:encoder[]){
     encoders.forEach ( encoder => {
         if (!shell.which(encoder.cli_command)){
             log(vflag, "updating encoder under npm module named " + encoder.npm_module)
-            shell.exec("npm i -g " + encoder.npm_module)   
+            shell.exec("npm install -g " + encoder.npm_module)   
         }
     })
 }

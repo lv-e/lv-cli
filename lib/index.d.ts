@@ -1,8 +1,14 @@
 #!/usr/bin/env node
 export declare type mode = ("run" | "help" | "verbose");
+export declare type driver = {
+    name: string;
+    docker_image: string;
+    cli_command: string;
+};
 export declare type encoder = {
     extension: string;
     npm_module: string;
+    auto_update: boolean;
     cli_command: string;
 };
 export declare type encoded = {
@@ -34,6 +40,7 @@ export declare type projectContent = {
     header: {
         version: string;
         engine: engineDefinition;
+        drivers: driver[];
         encoders: encoder[];
     };
 };
