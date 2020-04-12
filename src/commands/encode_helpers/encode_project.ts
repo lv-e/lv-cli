@@ -18,10 +18,13 @@ export function encodeProject(file:fileMap) : projectContent{
 
     encoders.forEach( encoder => {
         if (encoder.extension == file.extension) {
-            const outputPath = join(outputDir, "source", "lv", "engine.h")
+            
+            const outputPath = join(outputDir, "source")
+            
             log(vflag, chalk.blue("encoding project: ") + chalk.cyan(file.name))
             log(vflag, "using " + encoder.npm_module)
             createDirs(outputPath)
+
             log(vflag, encoder.cli_command + " -i " + file.path + " -o " + outputPath)
             shell.exec(encoder.cli_command + " -i " + file.path + " -o " + outputPath)
         }
