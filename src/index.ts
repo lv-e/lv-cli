@@ -26,6 +26,7 @@ export type driver = {
     name: string;
     docker_image: string;
     cli_command: string;
+    current?:boolean;
 }
 
 export type encoder = {
