@@ -26,7 +26,7 @@ function encodeSharedFile(file:fileMap){
     encoders.forEach( encoder => {
         if (encoder.extension == file.extension) {
             log(vflag, "encoding file: " + file.name + " with " + encoder.npm_module)
-            const outputFile = join(outputDir, "shared", "h-stripes", file.name + ".h-stripe")
+            const outputFile = join(outputDir, "artifacts", "shared", file.name + ".c-stripe")
             shell.exec(encoder.cli_command + " -i " + file.path + " -o " + outputFile)
         }
     })
@@ -34,7 +34,7 @@ function encodeSharedFile(file:fileMap){
 
 async function mergeEncodedSharedFolder() {
 
-    const sharedFilesDir = join(outputDir, "shared", "h-stripes")
+    const sharedFilesDir = join(outputDir, "artifacts", "shared")
     log(vflag, "reducing encoded shared files at " + sharedFilesDir)
     const files = readdirSync(sharedFilesDir)
 
@@ -42,6 +42,7 @@ async function mergeEncodedSharedFolder() {
     reduced.include_directive = template_shared_include
 
     files.forEach( file => {
+        if (!file.endsWith(".c-stripe")) return
         const filepath = join(sharedFilesDir, file)
         const jsonString = readFileSync(filepath, "utf8")
         const data:encoded = JSON.parse(jsonString)

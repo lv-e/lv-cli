@@ -42,9 +42,9 @@ function encodeSceneFile(file:fileMap, scene:sceneMap) {
     encoders.forEach( encoder => {
         if (encoder.extension == file.extension) {
             log(vflag, "encoding file: " + file.name + " with " + encoder.npm_module)
-            const path = join(outputDir, scene.name, "h-stripes")
+            const path = join(outputDir, "artifacts", scene.name)
             const salt = saltForPath(file.path)
-            const outputFile = join(path, salt + file.name + ".h-stripe")
+            const outputFile = join(path, salt + file.name + ".c-stripe")
             shell.exec(encoder.cli_command + " -i " + file.path + " -o " + outputFile)
         }
     })
@@ -52,7 +52,7 @@ function encodeSceneFile(file:fileMap, scene:sceneMap) {
 
 async function mergeEncodedScene(scene:sceneMap) {
 
-    const sceneDir = join(outputDir, scene.name, "h-stripes")
+    const sceneDir = join(outputDir, "artifacts", scene.name)
     log(vflag, "reducing encoded scene files under dir " + sceneDir)
     const files = readdirSync(sceneDir)
 
@@ -62,7 +62,7 @@ async function mergeEncodedScene(scene:sceneMap) {
     files.forEach( file => {
 
         const filepath = join(sceneDir, file)
-        if (!filepath.endsWith(".h-stripe")) return
+        if (!filepath.endsWith(".c-stripe")) return
 
         const jsonString = readFileSync(filepath, "utf8")
         const data:encoded = JSON.parse(jsonString)

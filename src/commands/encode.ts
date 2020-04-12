@@ -32,8 +32,7 @@ export async function encode(input:string, output:string, mode:mode) {
         project = encodeProject(projectData.project_file)
         
         // encode all scenes, this will generate .hstripes
-        let promises = await projectData.scenes.map( async scene => 
-            await encodeScene(scene))
+        let promises = projectData.scenes.map(async (scene) => encodeScene(scene))
         let encodedScenes = await Promise.all(promises)
         
         // encode all shared files

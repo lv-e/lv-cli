@@ -43,9 +43,11 @@ publish(){
 
 dryrun(){
     echo "assuming that there's a project at /tmp/lv-dryrun..."
+    rm -rf /tmp/lv-dryrun-cli/
     npm run rebuild
     node . verbose scan -i /tmp/lv-dryrun -o /tmp/lv-dryrun-cli/scan/structure.json
     node . verbose encode -i /tmp/lv-dryrun-cli/scan/structure.json -o /tmp/lv-dryrun-cli/encode
+    node . verbose reduce -i /tmp/lv-dryrun-cli/encode -o /tmp/lv-dryrun-cli/reduce
     open /tmp/lv-dryrun-cli/
 }
 
@@ -54,13 +56,13 @@ dryrun(){
  while true; do
 
         echo "available options are:"
-        echo "-[p] publish"
-        echo "-[r] dryrun"
+        echo "1) publish"
+        echo "2) dryrun"
         read -p "choose one: " opt; echo "--"
 
         case $opt in
-            [Pp]* ) publish; break;;
-            [Rr]* ) dryrun; break;;
+            1) publish; break;;
+            2) dryrun; break;;
             * ) echo "ok! bye."; exit;;
         esac
 done
