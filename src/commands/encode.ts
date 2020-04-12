@@ -38,7 +38,7 @@ export async function encode(input:string, output:string, mode:mode) {
         // encode all shared files
         projectData.shared.map( dir => encodeSharedDir(dir))
         
-        // encode main.c file
+        // encode main.cpp file
         encodeMain(encodedScenes)
     }
 }

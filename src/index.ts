@@ -4,13 +4,12 @@
 import meow from "meow"
 import { scan } from "./commands/scan"
 import { encode } from "./commands/encode"
-import { reduce } from "./commands/reduce"
 import { type } from "os"
 
 let cli = meow(`
     Usage
     $ lv-cli [verbose|help] <action> -i <input> -o <output>
-    where actions can be one of: scan, encode or reduce
+    where actions can be one of: scan, encode
     have fun! :)
 `, {
     flags: {
@@ -115,6 +114,5 @@ switch (command) {
     case "help": console.log(cli.help); break
     case "scan": scan(input, output, mode); break;
     case "encode": encode(input, output, mode); break;
-    case "reduce": reduce(input, output, mode); break;
     case "debug": console.log(cli.input[0], cli.flags); break
 }
