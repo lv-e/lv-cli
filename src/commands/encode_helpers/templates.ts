@@ -1,7 +1,7 @@
 
 // --- templates for scenes
 
-export const template_scene_hpp = 
+export const template_scene_h = 
 `
     static unsigned char {{uppercased_scene_name}} = {{scene_id}};
 
@@ -11,11 +11,11 @@ export const template_scene_hpp =
     void {{scene_name}}_on_exit();
 `
 
-export const template_scene_cpp = 
+export const template_scene_c = 
 `
-    #include "{{scene_name}}.hpp"
-    #include "shared.hpp"
-    #include "lv-engine/engine.hpp"
+    #include "{{scene_name}}.h"
+    #include "shared.h"
+    #include "lv-engine/engine.h"
 
     {{declarations}}
     
@@ -36,7 +36,7 @@ export const template_scene_cpp =
     }
 `
 
-export const template_scene_include  = `#include "{{scene_name}}.hpp"`
+export const template_scene_include  = `#include "{{scene_name}}.h"`
 
 // --- templates for shared folders
 
@@ -52,7 +52,7 @@ export const template_shared_hpp =
 #endif
 `
 
-export const template_shared_include = `#include "shared.hpp"`
+export const template_shared_include = `#include "shared.h"`
 
 // --- templates for main
 
@@ -61,8 +61,8 @@ export const template_main_c =
 // + LV game engine +
 // there's magic in these files <3
 
-#include "lv-driver/driver.hpp"
-#include "lv-engine/engine.hpp"
+#include "lv-driver/driver.h"
+#include "lv-engine/engine.h"
 {{scene_includes}}
 
 int main(){

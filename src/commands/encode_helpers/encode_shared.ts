@@ -14,10 +14,10 @@ export async function encodeSharedDir(dir:dirMap) {
     const response = await mergeEncodedSharedFolder()
     const sourceDir = join(outputDir, "source")
     
-    let hppPath = join(sourceDir, "shared.h")
-    createDirs(hppPath)
+    let hPath = join(sourceDir, "shared.h")
+    createDirs(hPath)
 
-    writeFileSync(hppPath, response.hpp)
+    writeFileSync(hPath, response.header)
     return response.encodedScene
 }
 
@@ -53,7 +53,7 @@ async function mergeEncodedSharedFolder() {
         return replaceAll(subject, "{{declarations}}", reduced.declarations || "")
     }
 
-    let sharedHPPFile = await astyle.format(applyReplaces(template_shared_hpp))
+    let sharedHeaderFile = await astyle.format(applyReplaces(template_shared_hpp))
 
-    return {hpp: sharedHPPFile, encodedScene: reduced}
+    return {header: sharedHeaderFile, encodedScene: reduced}
 }

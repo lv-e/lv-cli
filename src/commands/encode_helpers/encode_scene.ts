@@ -6,7 +6,7 @@ import { join } from "path"
 import { createDirs, replaceAll, removeBlankLines, log, saltForPath } from "../../helpers/helpers"
 import { writeFileSync, readdirSync, readFileSync } from "fs"
 import { vflag, outputDir, project } from "../encode"
-import { template_scene_include, template_scene_cpp, template_scene_hpp } from "./templates";
+import { template_scene_include, template_scene_c, template_scene_h } from "./templates";
 
 
 
@@ -19,7 +19,7 @@ export async function encodeScene(scene:sceneMap) : Promise<encoded> {
     const sceneSourceDir = join(outputDir, "source")
         
     let hppPath = join(sceneSourceDir, scene.name + ".h")
-    let cppPath = join(sceneSourceDir, scene.name + ".cpp") 
+    let cppPath = join(sceneSourceDir, scene.name + ".c") 
         
     createDirs(hppPath)
     createDirs(cppPath)
@@ -84,10 +84,10 @@ async function mergeEncodedScene(scene:sceneMap) {
         return mutable
     }
 
-    let sceneCPPFile = await astyle.format(applyReplaces(template_scene_cpp))
-    let sceneHPPFile = await astyle.format(applyReplaces(template_scene_hpp))
+    let sceneCFile = await astyle.format(applyReplaces(template_scene_c))
+    let sceneHFile = await astyle.format(applyReplaces(template_scene_h))
 
-    return {hpp: sceneHPPFile, cpp: sceneCPPFile, encodedScene: reduced}
+    return {hpp: sceneHFile, cpp: sceneCFile, encodedScene: reduced}
 }
 
 // --- helpers
