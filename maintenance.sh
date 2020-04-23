@@ -47,7 +47,7 @@ dryrun(){
     npm run rebuild
     node . verbose scan -i /tmp/lv-dryrun -o /tmp/lv-dryrun-cli/scan/structure.json
     node . verbose encode -i /tmp/lv-dryrun-cli/scan/structure.json -o /tmp/lv-dryrun-cli/encode
-    node . verbose build -i /tmp/lv-dryrun-cli/encode/source -o /tmp/lv-dryrun-cli/build/bin
+    node . verbose build -i /lv/script/build/build.sh -o /lv/bin/game.bin
     open /tmp/lv-dryrun-cli/
 }
 

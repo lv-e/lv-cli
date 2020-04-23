@@ -18,9 +18,8 @@ export function build(input:string, output:string, mode:mode = "run") {
         vflag = mode == "verbose" ? true : false
         log(vflag, chalk.green("[command] ") + chalk.blue("build"))
 
-        const command = "make -f " + input + " -o " + output
-        log(vflag, command)
+        const command = "." + input
+        log(vflag, "will run: " + command)
         shell.exec(command)
-
     }
 }
