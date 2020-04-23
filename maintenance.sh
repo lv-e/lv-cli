@@ -26,7 +26,7 @@ publish(){
 
                 npm run rebuild
                 git add .
-                git commit --allow-empty -m '$commit_message'
+                git commit --allow-empty -m "$commit_message"
                 npm version patch -m 'npm version bump'
                 npm publish
                 echo "there you go!"
@@ -47,7 +47,7 @@ dryrun(){
     npm run rebuild
     node . verbose scan -i /tmp/lv-dryrun -o /tmp/lv-dryrun-cli/scan/structure.json
     node . verbose encode -i /tmp/lv-dryrun-cli/scan/structure.json -o /tmp/lv-dryrun-cli/encode
-    node . verbose reduce -i /tmp/lv-dryrun-cli/encode -o /tmp/lv-dryrun-cli/reduce
+    node . verbose build -i /tmp/lv-dryrun-cli/encode/source -o /tmp/lv-dryrun-cli/build/bin
     open /tmp/lv-dryrun-cli/
 }
 

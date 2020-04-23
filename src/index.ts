@@ -5,11 +5,12 @@ import meow from "meow"
 import { scan } from "./commands/scan"
 import { encode } from "./commands/encode"
 import { type } from "os"
+import { build } from "./commands/build"
 
 let cli = meow(`
     Usage
     $ lv-cli [verbose|help] <action> -i <input> -o <output>
-    where actions can be one of: scan, encode
+    where actions can be one of: scan, encode, build, run
     have fun! :)
 `, {
     flags: {
@@ -114,5 +115,6 @@ switch (command) {
     case "help": console.log(cli.help); break
     case "scan": scan(input, output, mode); break;
     case "encode": encode(input, output, mode); break;
+    case "build": build(input, output, mode); break;
     case "debug": console.log(cli.input[0], cli.flags); break
 }
