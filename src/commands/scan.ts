@@ -3,7 +3,6 @@ import { extname, join } from "path";
 import { log, createDirs } from "../helpers/helpers";
 import { mode, fileMap, dirMap, rootFolders, sceneMap } from "../index";
 import { fail } from "assert";
-import chalk = require("chalk");
 
 const helpText = `
 'scan' will receive a input folder and search for the *.lvproject,
@@ -17,7 +16,7 @@ export function scan(inputFolder:string, outputFile:string,
     else {
 
         const vflag = mode == "verbose" ? true : false
-        log(vflag, chalk.green("[command] ") + chalk.blue("scan"))
+        log(vflag, "[command] " + "scan")
 
         log(vflag, "scanning " + inputFolder)
         let results = root_folders(inputFolder, project_file_extension)

@@ -1,5 +1,4 @@
 import { fileMap, projectContent, encoder } from "../.."
-import chalk = require("chalk")
 import shell from "shelljs";
 import { join } from "path"
 import { log, createDirs } from "../../helpers/helpers"
@@ -21,7 +20,7 @@ export function encodeProject(file:fileMap) : projectContent{
             
             const outputPath = join(outputDir, "source")
             
-            log(vflag, chalk.blue("encoding project: ") + chalk.cyan(file.name))
+            log(vflag, "encoding project: " + file.name)
             log(vflag, "using " + encoder.npm_module)
             createDirs(outputPath)
             

@@ -1,7 +1,6 @@
 import { log } from "../helpers/helpers"
 import { mode } from "../index";
 import shell from "shelljs";
-import chalk from "chalk";
 
 const helpText = `
 'build' will invoke build.sh script. later it can be used to parameterize builds.
@@ -16,7 +15,7 @@ export function build(input:string, output:string, mode:mode = "run") {
     else {
         
         vflag = mode == "verbose" ? true : false
-        log(vflag, chalk.green("[command] ") + chalk.blue("build"))
+        log(vflag, "[command] " + "build")
 
         const command = "." + input
         log(vflag, "will run: " + command)

@@ -1,5 +1,4 @@
 import { sceneMap, encoded, blankEncoded, dirMap, fileMap, encoder } from "../.."
-import chalk = require("chalk")
 import shell from "shelljs";
 import astyle from "astyle";
 import { join } from "path"
@@ -12,7 +11,7 @@ import { template_scene_include, template_scene_c, template_scene_h } from "./te
 
 export async function encodeScene(scene:sceneMap) : Promise<encoded> {
 
-    log(vflag, chalk.blue("encoding: ") + chalk.cyan(scene.name))
+    log(vflag, "encoding: " + scene.name)
     encodeSceneDir(scene, scene)
 
     const response = await mergeEncodedScene(scene)

@@ -24,11 +24,14 @@ publish(){
                 echo "publishing a new npm version. what's the commit message?"
                 read commit_message; echo "--"
 
-                npm run rebuild
+                rebuild
                 git add .
                 git commit --allow-empty -m "$commit_message"
-                npm version patch -m 'npm version bump'
-                npm publish
+
+                yarn config set version-tag-prefix "v"
+                yarn version --non-interactive --patch
+                yarn publish --non-interactive
+                
                 echo "there you go!"
 
                 break;;
@@ -41,10 +44,15 @@ publish(){
     done
 }
 
+rebuild(){
+    rm -rf ./lib
+    tsc -p . && node .
+}
+
 dryrun(){
     echo "assuming that there's a project at /tmp/lv-dryrun..."
     rm -rf /tmp/lv-dryrun-cli/
-    npm run rebuild
+    rebuild
     node . verbose scan -i /tmp/lv-dryrun -o /tmp/lv-dryrun-cli/scan/structure.json
     node . verbose encode -i /tmp/lv-dryrun-cli/scan/structure.json -o /tmp/lv-dryrun-cli/encode
     node . verbose build -i /lv/script/build/build.sh -o /lv/bin/game.bin

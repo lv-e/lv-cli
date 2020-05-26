@@ -1,7 +1,6 @@
 import { log } from "../helpers/helpers";
 import { readFileSync } from "fs";
 import { mode, rootFolders, projectContent } from "../index";
-import chalk = require("chalk");
 import { encodeScene } from "./encode_helpers/encode_scene";
 import { encodeProject } from "./encode_helpers/encode_project";
 import { encodeMain } from "./encode_helpers/encode_main";
@@ -22,7 +21,7 @@ export async function encode(input:string, output:string, mode:mode) {
 
         outputDir = output
         vflag = mode == "verbose" ? true : false
-        log(vflag, chalk.green("[command] ") + chalk.blue("encode"))
+        log(vflag, "[command] " + "encode")
 
         // load project file
         const projectJson = readFileSync(input, "utf8")
