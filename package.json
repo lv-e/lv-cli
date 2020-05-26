@@ -2,40 +2,46 @@
   "name": "@lv-game-editor/lv-cli",
   "version": "1.0.41",
   "description": "lv-game-editor companion cli",
+
   "author": "“Lino <luizgustavolino@gmail.com> (http://github.com/luizgustavolino)",
   "homepage": "https://github.com/lv-e/lv-cli",
   "license": "ISC",
+
   "publishConfig": {
     "access": "public"
   },
   "keywords": [
     "game editor, arduino, microcontroller"
   ],
+
   "repository": {
     "type": "git",
     "url": "github:lv-e/lv-cli.git"
   },
+
   "files": [
     "/lib"
   ],
+
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "bin": {
     "lv-cli": "./lib/index.js"
   },
+
   "dependencies": {
-    "@types/chalk": "^2.2.0",
-    "@types/shelljs": "^0.8.6",
     "astyle": "^2.0.0",
-    "chalk": "^3.0.0",
-    "esm": "^3.2.25",
     "meow": "^6.0.0",
     "shelljs": "^0.8.3"
   },
+
   "devDependencies": {
     "@types/node": "^13.13.9",
+    "@types/chalk": "^2.2.0",
+    "@types/shelljs": "^0.8.6",
     "nodemon": "^2.0.2",
     "ts-node": "^8.6.2",
     "typescript": "^3.7.5"
   }
+
 }
