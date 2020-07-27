@@ -1,8 +1,8 @@
-import { readdir, readdirSync, Dirent, writeFileSync } from "fs";
-import { extname, join } from "path";
-import { log, createDirs } from "../helpers/helpers";
-import { mode, fileMap, dirMap, rootFolders, sceneMap } from "../index";
 import { fail } from "assert";
+import { readdirSync, writeFileSync } from "fs";
+import { extname, join, parse } from "path";
+import { createDirs, log } from "../helpers/helpers";
+import { dirMap, fileMap, mode, rootFolders, sceneMap } from "../index";
 
 const helpText = `
 'scan' will receive a input folder and search for the *.lvproject,
@@ -41,7 +41,8 @@ function list(folder:string, name:string) : dirMap {
                 const extension = extname(entry.name)
                 const name = entry.name
                 const path = folder + "/" + name
-                files.push({path:path, name:name, extension:extension})
+                const parsed = parse(path)
+                files.push({path:path, name:parsed.name, extension:parsed.ext})
             } else if (entry.isDirectory()) {
                 directories.push(
                     list(folder + "/" + entry.name, entry.name)
