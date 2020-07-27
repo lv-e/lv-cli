@@ -64,10 +64,9 @@ export function root_folders(root:string, project_file_extension:string) : rootF
         .filter(entry => entry.isFile())
         .forEach(entry => {
             if(entry.name.endsWith(project_file_extension)){
-                const extension = project_file_extension
-                const name = entry.name
-                const path = join(root, name)
-                project_file = {path: path, name:name, extension:extension}
+                const path = join(root, entry.name)
+                const parsed = parse(path)
+                project_file = {path: path, name:parsed.name, extension:parsed.ext}
             }
         })
 
