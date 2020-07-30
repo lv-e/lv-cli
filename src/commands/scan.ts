@@ -1,5 +1,6 @@
 import { fail } from "assert";
 import { readdirSync, writeFileSync } from "fs";
+import { not as notJunk } from "junk";
 import { extname, join, parse } from "path";
 import { createDirs, log } from "../helpers/helpers";
 import { dirMap, fileMap, mode, rootFolders, sceneMap } from "../index";
@@ -36,6 +37,7 @@ function list(folder:string, name:string) : dirMap {
     let directories:dirMap[] = []
 
     readdirSync(folder, { withFileTypes: true })
+        .filter( f => notJunk(f.name))
         .forEach( entry => {
             if (entry.isFile()) {
                 const extension = extname(entry.name)

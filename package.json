@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "astyle": "^2.0.0",
+    "junk": "^3.1.0",
     "meow": "^6.0.0",
     "shelljs": "^0.8.3"
   },
