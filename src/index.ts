@@ -2,10 +2,9 @@
 'use strict'
 
 import meow from "meow"
-import { scan } from "./commands/scan"
-import { encode } from "./commands/encode"
-import { type } from "os"
 import { build } from "./commands/build"
+import { encode } from "./commands/encode"
+import { scan } from "./commands/scan"
 
 let cli = meow(`
     Usage
@@ -79,6 +78,10 @@ export type projectContent = {
         engine:engineDefinition,
         drivers:driver[],
         encoders:encoder[]
+    },
+    editor:{
+        openedFiles:string[]
+        selectedFile:(string|null)
     }
 }
 

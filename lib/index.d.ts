@@ -44,6 +44,10 @@ export declare type projectContent = {
         drivers: driver[];
         encoders: encoder[];
     };
+    editor: {
+        openedFiles: string[];
+        selectedFile: (string | null);
+    };
 };
 export declare type rootFolders = {
     scenes: sceneMap[];
