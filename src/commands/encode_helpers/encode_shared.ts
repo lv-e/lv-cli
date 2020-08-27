@@ -1,16 +1,17 @@
-import { fileMap, dirMap, encoded, blankEncoded } from "../..";
-import { project, vflag, outputDir } from "../encode";
+import astyle from "astyle";
+import { existsSync, readdirSync, readFileSync, writeFileSync } from "fs";
 import { join } from "path";
 import shell from "shelljs";
-import astyle from "astyle";
-import { log, removeBlankLines, replaceAll, createDirs } from "../../helpers/helpers";
-import { readdirSync, readFileSync, writeFileSync } from "fs";
-import { template_shared_include, template_shared_hpp } from "./templates";
+import { blankEncoded, dirMap, encoded, fileMap } from "../..";
+import { createDirs, log, removeBlankLines, replaceAll } from "../../helpers/helpers";
+import { outputDir, project, vflag } from "../encode";
+import { template_shared_hpp, template_shared_include } from "./templates";
 
-export async function encodeSharedDir(dir:dirMap) {
-    dir.directories.forEach( dir => encodeSharedDir(dir))
-    dir.files.forEach( file => encodeSharedFile(file))
 
+export async function encodeShared(dirs:dirMap[]) {
+    
+    encodeSharedDirs(dirs)
+    
     const response = await mergeEncodedSharedFolder()
     const sourceDir = join(outputDir, "source")
     
@@ -19,6 +20,13 @@ export async function encodeSharedDir(dir:dirMap) {
 
     writeFileSync(hPath, response.header)
     return response.encodedScene
+}
+
+function encodeSharedDirs(dirs:dirMap[]) {
+    dirs.map( dir => {
+        encodeSharedDirs(dir.directories)
+        dir.files.forEach( file => encodeSharedFile(file))
+    })
 }
 
 function encodeSharedFile(file:fileMap){
@@ -33,6 +41,10 @@ function encodeSharedFile(file:fileMap){
 }
 
 async function mergeEncodedSharedFolder() {
+
+    if (!existsSync("")){
+        return {header: "// leave empty", encodedScene: blankEncoded()}
+    }
 
     const sharedFilesDir = join(outputDir, "artifacts", "shared")
     log(vflag, "reducing encoded shared files at " + sharedFilesDir)

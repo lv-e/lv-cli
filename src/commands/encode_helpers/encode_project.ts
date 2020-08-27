@@ -1,9 +1,9 @@
-import { fileMap, projectContent, encoder } from "../.."
+import { readFileSync } from "fs";
+import { join } from "path";
 import shell from "shelljs";
-import { join } from "path"
-import { log, createDirs } from "../../helpers/helpers"
-import { readFileSync } from "fs"
-import { vflag, outputDir } from "../encode";
+import { encoder, fileMap, projectContent } from "../..";
+import { createDirs, log } from "../../helpers/helpers";
+import { outputDir, vflag } from "../encode";
 
 export function encodeProject(file:fileMap) : projectContent{
 
@@ -35,7 +35,8 @@ export function encodeProject(file:fileMap) : projectContent{
 
 function updateModules(encoders:encoder[]){
     encoders.forEach ( encoder => {
-        if (encoder.auto_update && !shell.which(encoder.cli_command)){
+        console.log("encoder " + encoder.auto_update)
+        if (encoder.auto_update /* && !shell.which(encoder.cli_command) */ ){
             log(vflag, "updating encoder under npm module named " + encoder.npm_module)
             shell.exec("npm install -g " + encoder.npm_module)   
         }

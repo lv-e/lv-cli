@@ -1,2 +1,2 @@
 import { dirMap, encoded } from "../..";
-export declare function encodeSharedDir(dir: dirMap): Promise<encoded>;
+export declare function encodeShared(dirs: dirMap[]): Promise<encoded>;

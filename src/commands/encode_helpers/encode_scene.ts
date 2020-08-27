@@ -1,11 +1,11 @@
-import { sceneMap, encoded, blankEncoded, dirMap, fileMap, encoder } from "../.."
-import shell from "shelljs";
 import astyle from "astyle";
-import { join } from "path"
-import { createDirs, replaceAll, removeBlankLines, log, saltForPath } from "../../helpers/helpers"
-import { writeFileSync, readdirSync, readFileSync } from "fs"
-import { vflag, outputDir, project } from "../encode"
-import { template_scene_include, template_scene_c, template_scene_h } from "./templates";
+import { readdirSync, readFileSync, writeFileSync } from "fs";
+import { join } from "path";
+import shell from "shelljs";
+import { blankEncoded, dirMap, encoded, fileMap, sceneMap } from "../..";
+import { createDirs, log, removeBlankLines, replaceAll, saltForPath } from "../../helpers/helpers";
+import { outputDir, project, vflag } from "../encode";
+import { template_scene_c, template_scene_h, template_scene_include } from "./templates";
 
 
 
@@ -103,7 +103,7 @@ let sceneTokens:string[] = []
 
 function identifierForScene(scene:sceneMap) : number {
     let index = sceneTokens.indexOf(scene.name)
-    if (index > -1) return index
+    if (index > -1) return index + 1
     sceneTokens.push(scene.name)
-    return sceneTokens.length - 1
+    return sceneTokens.length
 }

@@ -33,14 +33,9 @@ export declare type dirMap = {
     directories: dirMap[];
 };
 export declare type sceneMap = dirMap;
-export declare type engineDefinition = {
-    repo: string;
-    tag: string;
-};
 export declare type projectContent = {
     header: {
         version: string;
-        engine: engineDefinition;
         drivers: driver[];
         encoders: encoder[];
     };

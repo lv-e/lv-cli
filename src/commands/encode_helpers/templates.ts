@@ -3,8 +3,10 @@
 
 export const template_scene_h = 
 `
-    static unsigned char {{uppercased_scene_name}} = {{scene_id}};
+    #pragma once 
 
+    static unsigned char {{uppercased_scene_name}} = {{scene_id}};
+    void {{scene_name}}_setup();
     void {{scene_name}}_on_awake();
     void {{scene_name}}_on_enter();
     void {{scene_name}}_on_frame();
@@ -13,11 +15,20 @@ export const template_scene_h =
 
 export const template_scene_c = 
 `
-    #include "{{scene_name}}.h"
-    #include "shared.h"
+    #include "lv-game/{{scene_name}}.h"
+    #include "lv-game/shared.h"
     #include "lv-engine/engine.h"
 
     {{declarations}}
+
+    void {{scene_name}}_setup(){
+        scenesTable[{{uppercased_scene_name}}] = {
+            &{{scene_name}}_on_awake,
+            &{{scene_name}}_on_enter,
+            &{{scene_name}}_on_frame,
+            &{{scene_name}}_on_exit
+        };
+    }
     
     void {{scene_name}}_on_awake(){
         {{on_awake}}
@@ -36,7 +47,7 @@ export const template_scene_c =
     }
 `
 
-export const template_scene_include  = `#include "{{scene_name}}.h"`
+export const template_scene_include  = `#include "lv-game/{{scene_name}}.h"`
 
 // --- templates for shared folders
 
@@ -52,7 +63,7 @@ export const template_shared_hpp =
 #endif
 `
 
-export const template_shared_include = `#include "shared.h"`
+export const template_shared_include = `#include "lv-game/shared.h"`
 
 // --- templates for main
 
