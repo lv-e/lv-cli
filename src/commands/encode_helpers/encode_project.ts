@@ -18,7 +18,7 @@ export function encodeProject(file:fileMap) : projectContent{
     encoders.forEach( encoder => {
         if (encoder.extension == file.extension) {
             
-            const outputPath = join(outputDir, "source")
+            const outputPath = join(outputDir, "lv-game")
             
             log(vflag, "encoding project: " + file.name)
             log(vflag, "using " + encoder.npm_module)

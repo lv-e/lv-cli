@@ -13,7 +13,7 @@ export async function encodeShared(dirs:dirMap[]) {
     encodeSharedDirs(dirs)
     
     const response = await mergeEncodedSharedFolder()
-    const sourceDir = join(outputDir, "source")
+    const sourceDir = join(outputDir, "lv-game")
     
     let hPath = join(sourceDir, "shared.h")
     createDirs(hPath)
