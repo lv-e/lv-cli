@@ -1,2 +1,2 @@
-import { fileMap, projectContent } from "../..";
-export declare function encodeProject(file: fileMap): projectContent;
+import { projectContent, rootFolders } from "../..";
+export declare function encodeProject(root: rootFolders): projectContent;

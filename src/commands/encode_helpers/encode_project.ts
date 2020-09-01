@@ -1,16 +1,20 @@
-import { readFileSync } from "fs";
+import { readFileSync, writeFileSync } from "fs";
 import { join } from "path";
 import shell from "shelljs";
-import { encoder, fileMap, projectContent } from "../..";
-import { createDirs, log } from "../../helpers/helpers";
+import { driver, encoder, projectContent, rootFolders } from "../..";
+import { createDirs, log, replaceAll } from "../../helpers/helpers";
 import { outputDir, vflag } from "../encode";
+import { template_lvk_h } from "./templates";
 
-export function encodeProject(file:fileMap) : projectContent{
 
+export function encodeProject(root:rootFolders) : projectContent{
+    
+    const file = root.project_file
     const jsonString = readFileSync(file.path, "utf8")
     const project:projectContent = JSON.parse(jsonString) 
     
     let encoders = project.header.encoders
+    let drivers  = project.header.drivers
 
     log(vflag, "updating node modules...")
     updateModules(encoders)
@@ -30,13 +34,36 @@ export function encodeProject(file:fileMap) : projectContent{
         }
     })
 
+    drivers.forEach( driver => {
+        if (driver.current != true) return;
+        writeDriverKs(driver, root)
+    })
+    
     return project
+}
+
+
+function writeDriverKs(driver:driver, root:rootFolders){
+    
+    if (driver.properties == null ) return;
+    const display_width     = driver.properties["display_width"]
+    const display_heigth    = driver.properties["display_heigth"]
+    const scene_count       = root.scenes.length
+
+    let template = template_lvk_h
+    template = replaceAll(template, "{{lvk_scene_count}}", `${scene_count}`)
+    template = replaceAll(template, "{{lvk_display_w}}", display_width)
+    template = replaceAll(template, "{{lvk_display_h}}", display_heigth)
+    
+    const writePath = join(outputDir, "lv-game", "lvk.h")
+    createDirs(writePath)
+    writeFileSync(writePath, template)
 }
 
 function updateModules(encoders:encoder[]){
     encoders.forEach ( encoder => {
         console.log("encoder " + encoder.auto_update)
-        if (encoder.auto_update /* && !shell.which(encoder.cli_command) */ ){
+        if (encoder.auto_update || !shell.which(encoder.cli_command)){
             log(vflag, "updating encoder under npm module named " + encoder.npm_module)
             shell.exec("npm install -g " + encoder.npm_module)   
         }

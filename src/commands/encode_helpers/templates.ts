@@ -67,24 +67,26 @@ export const template_shared_include = `#include "lv-game/shared.h"`
 
 // --- templates for main
 
-export const template_main_c = 
+export const template_lvk_h = 
 `
 // + LV game engine +
 // there's magic in these files <3
 
-#include "lv-driver/driver.h"
-#include "lv-engine/engine.h"
-{{scene_includes}}
+#pragma once 
 
-int main(){
+#ifndef lvk_scene_count
+#define lvk_scene_count {{lvk_scene_count}}
+#endif
 
-    lvInit();
-    lv.system.draw();
+#ifndef lvk_display_h
+#define lvk_display_h {{lvk_display_h}}
+#endif
 
-    scene_main_on_enter();
-    for(int i = 0; i < 10; i ++) scene_main_on_frame();
-    scene_main_on_exit();
+#ifndef lvk_display_w
+#define lvk_display_w {{lvk_display_w}}
+#endif
 
-    return 0;
-}
+#ifndef lvk_octaspixels_per_line
+#define lvk_octaspixels_per_line 17
+#endif
 `

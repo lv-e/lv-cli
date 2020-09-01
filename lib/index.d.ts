@@ -5,6 +5,9 @@ export declare type driver = {
     docker_image: string;
     cli_command: string;
     current?: boolean;
+    properties?: {
+        [name: string]: string;
+    };
 };
 export declare type encoder = {
     extension: string;

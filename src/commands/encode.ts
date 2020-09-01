@@ -27,7 +27,7 @@ export async function encode(input:string, output:string, mode:mode) {
         const projectData:rootFolders = JSON.parse(projectJson) 
         
         // encode project, this will download the engine library too
-        project = encodeProject(projectData.project_file)
+        project = encodeProject(projectData)
         
         // encode all scenes, this will generate .hstripes
         let promises = projectData.scenes.map(async (scene) => encodeScene(scene))
