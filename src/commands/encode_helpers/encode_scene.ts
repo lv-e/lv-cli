@@ -18,7 +18,7 @@ export async function encodeScene(scene:sceneMap) : Promise<encoded> {
     const sceneSourceDir = join(outputDir, "lv-game")
         
     let hppPath = join(sceneSourceDir, scene.name + ".h")
-    let cppPath = join(sceneSourceDir, scene.name + ".c") 
+    let cppPath = join(sceneSourceDir, scene.name + ".cpp") 
         
     createDirs(hppPath)
     createDirs(cppPath)
