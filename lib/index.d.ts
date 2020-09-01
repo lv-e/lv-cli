@@ -8,6 +8,9 @@ export declare type driver = {
     properties?: {
         [name: string]: string;
     };
+    secrets?: {
+        [name: string]: string;
+    };
 };
 export declare type encoder = {
     extension: string;

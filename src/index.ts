@@ -30,6 +30,7 @@ export type driver = {
     cli_command: string;
     current?:boolean;
     properties?: {[name: string]: string}
+    secrets?: {[name: string]: string}
 }
 
 export type encoder = {
