@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync } from "fs";
 import { join } from "path";
 import shell from "shelljs";
-import { driver, encoder, projectContent, rootFolders } from "../..";
+import { driver, encoder, projectContent, rootFolders, syslog } from "../..";
 import { createDirs, log, replaceAll } from "../../helpers/helpers";
 import { outputDir, vflag } from "../encode";
 import { template_lvk_h } from "./templates";
@@ -16,16 +16,14 @@ export function encodeProject(root:rootFolders) : projectContent{
     let encoders = project.header.encoders
     let drivers  = project.header.drivers
 
-    log(vflag, "updating node modules...")
     updateModules(encoders)
 
     encoders.forEach( encoder => {
         if (encoder.extension == file.extension) {
             
+            syslog(`encoding project with ${encoder.cli_command}`)
+
             const outputPath = join(outputDir, "lv-game")
-            
-            log(vflag, "encoding project: " + file.name)
-            log(vflag, "using " + encoder.npm_module)
             createDirs(outputPath)
             
             const command = encoder.cli_command + " -i " + file.path + " -o " + outputPath
@@ -55,6 +53,8 @@ function writeDriverKs(driver:driver, root:rootFolders){
     template = replaceAll(template, "{{lvk_display_w}}", display_width)
     template = replaceAll(template, "{{lvk_display_h}}", display_heigth)
     
+    syslog(`writing driver's constants (lvk.h)`)
+
     const writePath = join(outputDir, "lv-game", "lvk.h")
     createDirs(writePath)
     writeFileSync(writePath, template)
@@ -62,9 +62,8 @@ function writeDriverKs(driver:driver, root:rootFolders){
 
 function updateModules(encoders:encoder[]){
     encoders.forEach ( encoder => {
-        console.log("encoder " + encoder.auto_update)
         if (encoder.auto_update || !shell.which(encoder.cli_command)){
-            log(vflag, "updating encoder under npm module named " + encoder.npm_module)
+            syslog(`updating encoder ${encoder.npm_module}`)
             shell.exec("npm install -g " + encoder.npm_module)   
         }
     })

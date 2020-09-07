@@ -2,7 +2,7 @@ import astyle from "astyle";
 import { existsSync, readdirSync, readFileSync, writeFileSync } from "fs";
 import { join } from "path";
 import shell from "shelljs";
-import { blankEncoded, dirMap, encoded, fileMap } from "../..";
+import { blankEncoded, dirMap, encoded, fileMap, syslog } from "../..";
 import { createDirs, log, removeBlankLines, replaceAll } from "../../helpers/helpers";
 import { outputDir, project, vflag } from "../encode";
 import { template_shared_hpp, template_shared_include } from "./templates";
@@ -19,6 +19,8 @@ export async function encodeShared(dirs:dirMap[]) {
     createDirs(hPath)
 
     writeFileSync(hPath, response.header)
+    syslog(`shared encoded!`)
+
     return response.encodedScene
 }
 
@@ -33,7 +35,7 @@ function encodeSharedFile(file:fileMap){
     let encoders = project.header.encoders
     encoders.forEach( encoder => {
         if (encoder.extension == file.extension) {
-            log(vflag, "encoding file: " + file.name + " with " + encoder.npm_module)
+            syslog(`encoding ${file.name} with ${encoder.cli_command}`)
             const outputFile = join(outputDir, "artifacts", "shared", file.name + ".c-stripe")
             shell.exec(encoder.cli_command + " -i " + file.path + " -o " + outputFile)
         }

@@ -28,7 +28,6 @@ export async function encode(input:string, output:string, mode:mode) {
         const projectData:rootFolders = JSON.parse(projectJson) 
         
         // encode project
-        syslog("building project's lvk.h")
         project = encodeProject(projectData)
         
         // encode all scenes, this will generate .hstripes

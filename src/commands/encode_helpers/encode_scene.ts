@@ -3,16 +3,14 @@ import { readdirSync, readFileSync, writeFileSync } from "fs";
 import { join } from "path";
 import shell from "shelljs";
 import { blankEncoded, dirMap, encoded, fileMap, sceneMap, syslog } from "../..";
-import { createDirs, log, removeBlankLines, replaceAll, saltForPath } from "../../helpers/helpers";
-import { outputDir, project, vflag } from "../encode";
+import { createDirs, removeBlankLines, replaceAll, saltForPath } from "../../helpers/helpers";
+import { outputDir, project } from "../encode";
 import { template_scene_c, template_scene_h, template_scene_include } from "./templates";
 
 
 export async function encodeScene(scene:sceneMap) : Promise<encoded> {
 
-    log(vflag, "encoding: " + scene.name)
-    syslog("encoding " + scene.name)
-    
+    syslog("generating " + scene.name)    
     encodeSceneDir(scene, scene)
 
     const response = await mergeEncodedScene(scene)
@@ -26,6 +24,8 @@ export async function encodeScene(scene:sceneMap) : Promise<encoded> {
 
     writeFileSync(hppPath, response.hpp)
     writeFileSync(cppPath, response.cpp)
+    
+    syslog(`${scene.name} encoded!`)
 
     return response.encodedScene
 }
@@ -41,19 +41,23 @@ function encodeSceneFile(file:fileMap, scene:sceneMap) {
     let encoders = project.header.encoders
     encoders.forEach( encoder => {
         if (encoder.extension == file.extension) {
-            log(vflag, "encoding file: " + file.name + " with " + encoder.npm_module)
+            
+            syslog(`encoding ${file.name} with ${encoder.cli_command}`)
+
             const path = join(outputDir, "artifacts", scene.name)
             const salt = saltForPath(file.path)
             const outputFile = join(path, salt + file.name + ".c-stripe")
             shell.exec(encoder.cli_command + " -i " + file.path + " -o " + outputFile)
+            
         }
     })
 }
 
 async function mergeEncodedScene(scene:sceneMap) {
 
+    syslog(`merging ${scene.name} files`)
+    
     const sceneDir = join(outputDir, "artifacts", scene.name)
-    log(vflag, "reducing encoded scene files under dir " + sceneDir)
     const files = readdirSync(sceneDir)
 
     let reduced:encoded = blankEncoded()
