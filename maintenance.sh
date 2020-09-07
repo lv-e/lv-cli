@@ -57,7 +57,9 @@ dryrun(){
     echo "assuming that there's a project at /tmp/lv-dryrun..."
     node . verbose scan -i /tmp/lv-dryrun -o /tmp/lv-dryrun-cli/scan/structure.json
     node . verbose encode -i /tmp/lv-dryrun-cli/scan/structure.json -o /tmp/lv-dryrun-cli/encode
-    # node . verbose build -i /lv/script/build/build.sh -o /lv/bin/game.bin
+    node . log -i 'log dryrun foo' -o /tmp/lv-dryrun-cli/log/log.txt
+    node . log -i 'log dryrun bar' -o /tmp/lv-dryrun-cli/log/log.txt
+    
     open /tmp/lv-dryrun-cli/
 }
 

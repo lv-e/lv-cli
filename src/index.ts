@@ -4,6 +4,7 @@
 import meow from "meow"
 import { build } from "./commands/build"
 import { encode } from "./commands/encode"
+import { log } from "./commands/log"
 import { scan } from "./commands/scan"
 
 let cli = meow(`
@@ -115,5 +116,6 @@ switch (command) {
     case "scan": scan(input, output, mode); break;
     case "encode": encode(input, output, mode); break;
     case "build": build(input, output, mode); break;
+    case "log": log(input, output, mode); break;
     case "debug": console.log(cli.input[0], cli.flags); break
 }
