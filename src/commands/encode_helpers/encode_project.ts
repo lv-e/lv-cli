@@ -63,7 +63,7 @@ function writeDriverKs(driver:driver, root:rootFolders){
 function updateModules(encoders:encoder[]){
     encoders.forEach ( encoder => {
         if (encoder.auto_update || !shell.which(encoder.cli_command)){
-            syslog(`updating encoder ${encoder.npm_module}`)
+            syslog(`updating ${encoder.extension} encoder`)
             shell.exec("npm install -g " + encoder.npm_module)   
         }
     })
