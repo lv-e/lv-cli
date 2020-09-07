@@ -1,6 +1,6 @@
 import { readFileSync } from "fs";
 import { log } from "../helpers/helpers";
-import { mode, projectContent, rootFolders } from "../index";
+import { mode, projectContent, rootFolders, syslog } from "../index";
 import { encodeProject } from "./encode_helpers/encode_project";
 import { encodeScene } from "./encode_helpers/encode_scene";
 import { encodeShared } from "./encode_helpers/encode_shared";
@@ -23,10 +23,12 @@ export async function encode(input:string, output:string, mode:mode) {
         log(vflag, "[command] " + "encode")
 
         // load project file
+        syslog("planning build")
         const projectJson = readFileSync(input, "utf8")
         const projectData:rootFolders = JSON.parse(projectJson) 
         
-        // encode project, this will download the engine library too
+        // encode project
+        syslog("building project's lvk.h")
         project = encodeProject(projectData)
         
         // encode all scenes, this will generate .hstripes
@@ -34,6 +36,7 @@ export async function encode(input:string, output:string, mode:mode) {
         await Promise.all(promises)
         
         // encode all shared files & dirs
+        syslog("encoding shared content")
         await encodeShared(projectData.shared)
         
         log(vflag, "done encoding!")

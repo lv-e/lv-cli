@@ -2,16 +2,17 @@ import astyle from "astyle";
 import { readdirSync, readFileSync, writeFileSync } from "fs";
 import { join } from "path";
 import shell from "shelljs";
-import { blankEncoded, dirMap, encoded, fileMap, sceneMap } from "../..";
+import { blankEncoded, dirMap, encoded, fileMap, sceneMap, syslog } from "../..";
 import { createDirs, log, removeBlankLines, replaceAll, saltForPath } from "../../helpers/helpers";
 import { outputDir, project, vflag } from "../encode";
 import { template_scene_c, template_scene_h, template_scene_include } from "./templates";
 
 
-
 export async function encodeScene(scene:sceneMap) : Promise<encoded> {
 
     log(vflag, "encoding: " + scene.name)
+    syslog("encoding " + scene.name)
+    
     encodeSceneDir(scene, scene)
 
     const response = await mergeEncodedScene(scene)

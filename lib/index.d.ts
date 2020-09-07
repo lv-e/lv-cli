@@ -57,3 +57,4 @@ export declare type rootFolders = {
     project_file: fileMap;
     generated_at: string;
 };
+export declare function syslog(data: string): void;

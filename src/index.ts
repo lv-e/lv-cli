@@ -20,6 +20,10 @@ let cli = meow(`
         output: {
             type: 'string', alias: 'o'
         }
+        ,
+        logpath: {
+            type: 'string', alias: 'l', default: "/lv/shared/log.txt"
+        }
     }
 })
 
@@ -92,6 +96,7 @@ export type rootFolders = {
 
 const input = cli.flags.input
 const output = cli.flags.output
+const logpath = cli.flags.logpath
 
 let command:string
 let mode:mode
@@ -111,11 +116,15 @@ switch (cli.input[0]) {
         break
 }
 
+export function syslog(data:string) {
+    log(data, logpath, mode)
+}
+
 switch (command) {
     case "help": console.log(cli.help); break
     case "scan": scan(input, output, mode); break;
     case "encode": encode(input, output, mode); break;
     case "build": build(input, output, mode); break;
-    case "log": log(input, output, mode); break;
+    case "log": log(input, logpath, mode); break;
     case "debug": console.log(cli.input[0], cli.flags); break
 }
