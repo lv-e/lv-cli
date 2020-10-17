@@ -90,7 +90,7 @@ export const template_lvk_h =
 #define lvk_60hz 0
 #endif
 
-#ifndef lvk_measuring_fps
-#define lvk_measuring_fps {{lvk_show_fps}}
+#ifndef lvk_measuring
+#define lvk_measuring {{debug_mode}}
 #endif
 `

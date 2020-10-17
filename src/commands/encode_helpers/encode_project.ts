@@ -46,14 +46,14 @@ function writeDriverKs(driver:driver, root:rootFolders){
     if (driver.properties == null ) return;
     const display_width     = driver.properties["display_width"]
     const display_heigth    = driver.properties["display_heigth"]
-    const show_fps          = driver.properties["show_fps"]
+    const debug_mode          = driver.properties["debug_mode"]
     const scene_count       = root.scenes.length
 
     let template = template_lvk_h
     template = replaceAll(template, "{{lvk_scene_count}}", `${scene_count}`)
     template = replaceAll(template, "{{lvk_display_w}}", display_width)
     template = replaceAll(template, "{{lvk_display_h}}", display_heigth)
-    template = replaceAll(template, "{{lvk_show_fps}}", Boolean(show_fps) ? "1" : "0")
+    template = replaceAll(template, "{{lvk_debug_mode}}", Boolean(debug_mode) ? "1" : "0")
     
     syslog(`writing driver's constants (lvk.h)`)
 
